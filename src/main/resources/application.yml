@@ -7,6 +7,8 @@ job:
 
 finanzblick:
   address: https://www.buhl.de/finanzblick/
+  user: ${FINANZBLICK_USER}
+  password: ${FINANZBLICK_PW}
 
 ---
 spring:

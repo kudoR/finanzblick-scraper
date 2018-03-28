@@ -2,6 +2,7 @@ package eu.ffs.finanzen.finanzblickscraper.job;
 
 import eu.ffs.finanzen.finanzblickscraper.csv.CSVReader;
 import eu.ffs.finanzen.finanzblickscraper.entity.Buchung;
+import eu.ffs.finanzen.finanzblickscraper.scraper.ScraperConfig;
 import eu.ffs.finanzen.finanzblickscraper.scraper.ScraperJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,22 +17,26 @@ public class ScraperJobWorker {
     private ScraperJob scraperJob;
     private CSVReader csvReader;
     private BuchungRepository buchungRepository;
+    private ScraperConfig scraperConfig;
 
     @Autowired
-    public ScraperJobWorker(ScraperJob scraperJob, CSVReader csvReader, BuchungRepository buchungRepository) {
+    public ScraperJobWorker(ScraperJob scraperJob, CSVReader csvReader, BuchungRepository buchungRepository, ScraperConfig scraperConfig) {
         this.scraperJob = scraperJob;
         this.csvReader = csvReader;
         this.buchungRepository = buchungRepository;
+        this.scraperConfig = scraperConfig;
     }
 
     @Scheduled(fixedRateString = "${job.scheduler.rate}")
     public void performScraping() throws InterruptedException {
-        this.scraperJob.getExport("johannes.hinkov@gmail.com", ""); // TODO pw...
+        String userName = scraperConfig.getUserName();
+        String password = scraperConfig.getPassword();
+        this.scraperJob.getExport(userName, password);
     }
 
     @Scheduled(fixedRate = 1000L)
     public void performImport() throws FileNotFoundException {
-        String downloadFilePath = "/home/seluser/Downloads/Buchungsliste.csv"; // TODO lokaler Pfad passt nicht...
+        String downloadFilePath = "/home/seluser/Downloads/Buchungsliste.csv"; // TODO: sucht im aktuellen Container (scraper), muss aber in selenium suchen
         List<Buchung> buchungen = csvReader.doRead(downloadFilePath);
 
         this.buchungRepository.saveAll(buchungen);

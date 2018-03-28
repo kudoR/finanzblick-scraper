@@ -14,6 +14,12 @@ public class ScraperConfig {
     @Value("${finanzblick.address}")
     private String finanzblickAdress;
 
+    @Value("${finanzblick.user}")
+    private String userName;
+
+    @Value("${finanzblick.pw}")
+    private String password;
+
     public String getSeleniumAddress() {
         return seleniumAddress;
     }
@@ -28,5 +34,21 @@ public class ScraperConfig {
 
     public void setFinanzblickAdress(String finanzblickAdress) {
         this.finanzblickAdress = finanzblickAdress;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
