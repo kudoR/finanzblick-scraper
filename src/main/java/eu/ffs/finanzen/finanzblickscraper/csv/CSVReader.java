@@ -13,8 +13,9 @@ public class CSVReader {
 
     public List<Buchung> doRead(String filePath) throws FileNotFoundException {
         return new CsvToBeanBuilder(new FileReader(filePath))
+                .withType(Buchung.class)
+                .withSkipLines(1)
                 .build().parse();
-
     }
 
 }

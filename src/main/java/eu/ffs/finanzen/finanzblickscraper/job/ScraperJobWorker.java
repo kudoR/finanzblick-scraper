@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import eu.ffs.finanzen.finanzblickscraper.repository.BuchungRepository;
 
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -28,7 +29,7 @@ public class ScraperJobWorker {
     }
 
     @Scheduled(fixedRateString = "${job.scheduler.rate}")
-    public void performScraping() throws InterruptedException {
+    public void performScraping() throws InterruptedException, MalformedURLException {
         String userName = scraperConfig.getUserName();
         String password = scraperConfig.getPassword();
         this.scraperJob.getExport(userName, password);
@@ -36,7 +37,7 @@ public class ScraperJobWorker {
 
     @Scheduled(fixedRate = 1000L)
     public void performImport() throws FileNotFoundException {
-        String downloadFilePath = "/home/seluser/Downloads/Buchungsliste.csv"; // TODO: sucht im aktuellen Container (scraper), muss aber in selenium suchen
+        String downloadFilePath = "/opt/docker_share/Buchungsliste.csv";
         List<Buchung> buchungen = csvReader.doRead(downloadFilePath);
 
         this.buchungRepository.saveAll(buchungen);

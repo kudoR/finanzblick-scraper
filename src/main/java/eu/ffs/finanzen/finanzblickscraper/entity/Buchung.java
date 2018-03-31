@@ -1,7 +1,5 @@
 package eu.ffs.finanzen.finanzblickscraper.entity;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,22 +12,22 @@ public class Buchung {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String buchungsDatum;
+    private String buchungsdatum;
     private String empfaenger;
-    private String verwendungsZweck;
-    private String buchungsText;
+    private String verwendungszweck;
+    private String buchungstext;
     private String betrag;
     private String iban;
     private String bic;
     private String kategorie;
 
 
-    public String getBuchungsDatum() {
-        return buchungsDatum;
+    public String getBuchungsdatum() {
+        return buchungsdatum;
     }
 
-    public void setBuchungsDatum(String buchungsDatum) {
-        this.buchungsDatum = buchungsDatum;
+    public void setBuchungsdatum(String buchungsdatum) {
+        this.buchungsdatum = buchungsdatum;
     }
 
     public String getEmpfaenger() {
@@ -40,20 +38,20 @@ public class Buchung {
         this.empfaenger = empfaenger;
     }
 
-    public String getVerwendungsZweck() {
-        return verwendungsZweck;
+    public String getVerwendungszweck() {
+        return verwendungszweck;
     }
 
-    public void setVerwendungsZweck(String verwendungsZweck) {
-        this.verwendungsZweck = verwendungsZweck;
+    public void setVerwendungszweck(String verwendungszweck) {
+        this.verwendungszweck = verwendungszweck;
     }
 
-    public String getBuchungsText() {
-        return buchungsText;
+    public String getBuchungstext() {
+        return buchungstext;
     }
 
-    public void setBuchungsText(String buchungsText) {
-        this.buchungsText = buchungsText;
+    public void setBuchungstext(String buchungstext) {
+        this.buchungstext = buchungstext;
     }
 
     public String getBetrag() {

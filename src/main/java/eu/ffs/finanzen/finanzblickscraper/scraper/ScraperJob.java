@@ -1,33 +1,139 @@
 package eu.ffs.finanzen.finanzblickscraper.scraper;
 
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 @Component
-public class ScraperJob extends ScraperBase {
+public class ScraperJob {
 
     ScraperConfig scraperConfig;
+    RemoteWebDriver driver;
+    FluentWait wait;
 
     @Autowired
-    public ScraperJob(ScraperConfig scraperConfigBean) {
-        super(scraperConfigBean.getSeleniumAddress());
+    public ScraperJob(ScraperConfig scraperConfigBean) throws MalformedURLException {
         this.scraperConfig = scraperConfigBean;
     }
 
-    @Override
-    public void getExport(String user, String pw) throws InterruptedException {
+    public void getExport(String user, String pw) throws InterruptedException, MalformedURLException {
+
+        if (driver == null) {
+            this.driver = new RemoteWebDriver(
+                    new URL(scraperConfig.getSeleniumAddress()),
+                    DesiredCapabilities.chrome()
+            );
+        }
+
+        if (this.wait == null) {
+            this.wait = new FluentWait<>(driver)
+                    .withTimeout(60, SECONDS)
+                    .pollingEvery(5, SECONDS)
+                    .ignoring(NoSuchElementException.class);
+        }
+
         driver.get(this.scraperConfig.getFinanzblickAdress());
 
-        fillInput(By.id("ms-input-uname"),user);
-        fillInput(By.id("ms-input-pword"),pw);
+        // try with default flow
+        boolean success = getExportDefault(user, pw);
 
-        waitUntilClickableAndThenClickOn(By.id("ms-button-login"));
+        // default flow was not successful. either there is a hint to be confirmed ...
+        if (!success) {
+            success = getExportWithConfirmOldSession();
+        }
+
+        // ... or the buttons are minimzed
+
+
+        // quit sesssion
+        driver.close();
+        driver.quit();
+    }
+
+    private boolean getExportDefault(String user, String pw) throws InterruptedException {
+        try {
+            System.out.println("Trying default flow...");
+
+            fillInput(By.id("ms-input-uname"), user);
+            fillInput(By.id("ms-input-pword"), pw);
+
+            waitUntilClickableAndThenClickOn(By.id("ms-button-login"));
+
+            waitUntilClickableAndThenClickOn(By.id("menu-account"));
+            waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
+            waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
+
+            System.out.println("Default flow was successful.");
+            return true;
+        } catch (Exception e) {
+            System.out.println("Default flow was not successful.");
+            return false;
+        }
+    }
+
+    private boolean getExportWithConfirmOldSession() throws InterruptedException {
+        System.out.println("Trying confirm old session flow...");
+        String selector = "popup-user-is-online-button-ok";
+
+        waitUntilClickableAndThenClickOn(By.id(selector));
 
         waitUntilClickableAndThenClickOn(By.id("menu-account"));
         waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
         waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
 
 
+        return true;
     }
+
+    protected void confirmDownloadwindow() throws InterruptedException, AWTException {
+        Thread.sleep(10000);
+
+        // Create object of Robot class
+        Robot object = new Robot();
+
+        object.keyPress(KeyEvent.VK_DOWN);
+        object.keyRelease(KeyEvent.VK_DOWN);
+
+        object.keyPress(KeyEvent.VK_ENTER);
+        object.keyRelease(KeyEvent.VK_ENTER);
+
+    }
+
+    protected void fillInput(By by, String text) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        WebElement element = driver.findElement(by);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.sendKeys(text);
+    }
+
+    protected void clickOnElemNotInViewport(By by) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        WebElement element = driver.findElement(by);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
+    }
+
+    protected void waitUntilVisibleAndThenClickOn(By by) throws InterruptedException {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+
+        driver.findElement(by).click();
+    }
+
+    protected void waitUntilClickableAndThenClickOn(By by) throws InterruptedException {
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+        driver.findElement(by).click();
+
+    }
+
 }
