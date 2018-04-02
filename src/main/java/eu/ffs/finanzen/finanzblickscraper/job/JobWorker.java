@@ -14,14 +14,16 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
-public class ScraperJobWorker {
+public class JobWorker {
     private ScraperJob scraperJob;
     private CSVReader csvReader;
     private BuchungRepository buchungRepository;
     private ScraperConfig scraperConfig;
+    private Boolean jobRunning;
 
     @Autowired
-    public ScraperJobWorker(ScraperJob scraperJob, CSVReader csvReader, BuchungRepository buchungRepository, ScraperConfig scraperConfig) {
+    public JobWorker(ScraperJob scraperJob, CSVReader csvReader, BuchungRepository buchungRepository, ScraperConfig scraperConfig) {
+        this.jobRunning = false;
         this.scraperJob = scraperJob;
         this.csvReader = csvReader;
         this.buchungRepository = buchungRepository;
@@ -30,18 +32,28 @@ public class ScraperJobWorker {
 
     @Scheduled(fixedRateString = "${job.scheduler.rate}")
     public void performScraping() throws InterruptedException, MalformedURLException {
-        String userName = scraperConfig.getUserName();
-        String password = scraperConfig.getPassword();
-        this.scraperJob.getExport(userName, password);
+        synchronized (jobRunning) {
+            if (!jobRunning) {
+                jobRunning = true;
+                String userName = scraperConfig.getUserName();
+                String password = scraperConfig.getPassword();
+                this.scraperJob.getExport(userName, password);
+                jobRunning = false;
+            }
+        }
     }
 
-    @Scheduled(fixedRate = 1000L)
-    public void performImport() throws FileNotFoundException {
+    @Scheduled(fixedRate = 10000L)
+    public void performImport() {
         String downloadFilePath = "/opt/docker_share/Buchungsliste.csv";
-        List<Buchung> buchungen = csvReader.doRead(downloadFilePath);
-
-        this.buchungRepository.saveAll(buchungen);
-
+        List<Buchung> buchungen = null;
+        try {
+            buchungen = csvReader.doRead(downloadFilePath);
+            this.buchungRepository.saveAll(buchungen);
+        } catch (FileNotFoundException e) {
+            System.out.println("No file found for import. Will try again later.");
+        //    e.printStackTrace();
+        }
     }
 
 }

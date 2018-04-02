@@ -2,6 +2,7 @@
 export FINANZBLICK_USER=dummy_user_for_test_run
 export FINANZBLICK_PW=dummy_pw_for_test_run
 mvn clean install
+docker network create finanzblick-net
 docker build . -t finanzblickscraper
 docker stop fb-scraper
 docker rm fb-scraper

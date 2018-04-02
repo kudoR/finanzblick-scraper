@@ -1,7 +1,10 @@
 package eu.ffs.finanzen.finanzblickscraper.scraper;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -10,8 +13,12 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -23,16 +30,21 @@ public class ScraperJob {
     FluentWait wait;
 
     @Autowired
-    public ScraperJob(ScraperConfig scraperConfigBean) throws MalformedURLException {
+    public ScraperJob(ScraperConfig scraperConfigBean) {
         this.scraperConfig = scraperConfigBean;
     }
 
-    public void getExport(String user, String pw) throws InterruptedException, MalformedURLException {
+    public void getExport(String user, String pw) throws MalformedURLException {
 
         if (driver == null) {
+            ChromeOptions options = new ChromeOptions();
+            Map<String, Object> prefs = new HashMap<>();
+            prefs.put("download.prompt_for_download", true);
+            prefs.put("download.default_directory", "/home/seluser/Downloads");
+            options.setExperimentalOption("prefs", prefs);
             this.driver = new RemoteWebDriver(
                     new URL(scraperConfig.getSeleniumAddress()),
-                    DesiredCapabilities.chrome()
+                    options
             );
         }
 
@@ -59,9 +71,10 @@ public class ScraperJob {
         // quit sesssion
         driver.close();
         driver.quit();
+        this.driver = null;
     }
 
-    private boolean getExportDefault(String user, String pw) throws InterruptedException {
+    private boolean getExportDefault(String user, String pw) {
         try {
             System.out.println("Trying default flow...");
 
@@ -74,6 +87,13 @@ public class ScraperJob {
             waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
             waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
 
+            while(!fileDownloaded()) {
+                System.out.println("Waiting for file download to complete...");
+                Thread.sleep(1000);
+            }
+
+            wait.withTimeout(10, TimeUnit.SECONDS);
+
             System.out.println("Default flow was successful.");
             return true;
         } catch (Exception e) {
@@ -82,16 +102,26 @@ public class ScraperJob {
         }
     }
 
-    private boolean getExportWithConfirmOldSession() throws InterruptedException {
-        System.out.println("Trying confirm old session flow...");
-        String selector = "popup-user-is-online-button-ok";
+    private boolean fileDownloaded() {
+        String downloadFilePath = "/opt/docker_share/Buchungsliste.csv";
+        File file = new File(downloadFilePath);
+        return file.exists();
+    }
 
-        waitUntilClickableAndThenClickOn(By.id(selector));
+    private boolean getExportWithConfirmOldSession() {
+        try {
+            System.out.println("Trying confirm old session flow...");
+            String selector = "popup-user-is-online-btn-ok";
 
-        waitUntilClickableAndThenClickOn(By.id("menu-account"));
-        waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
-        waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
+            waitUntilClickableAndThenClickOn(By.id(selector));
 
+            waitUntilClickableAndThenClickOn(By.id("menu-account"));
+            waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
+            waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
+
+        } catch (Exception e) {
+            return false;
+        }
 
         return true;
     }
