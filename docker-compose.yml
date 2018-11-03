@@ -10,9 +10,10 @@ services:
       - exports:/opt/docker_share
 
   selenium:
-    image: selenium/standalone-chrome-debug
+    image: deinchristian/rpi-selenium-hub-debug
     ports:
       - 5900:5900
+      - 4444:4444
     volumes:
       - selenium0:/dev/shm
       - exports:/home/seluser/Downloads
