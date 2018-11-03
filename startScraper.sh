@@ -5,4 +5,4 @@ docker network create finanzblick-net
 docker build . -t finanzblickscraper
 docker stop fb-scraper
 docker rm fb-scraper
-docker run -dit -v /opt/docker_share:/opt/docker_share --name fb-scraper --network finanzblick-net -e FINANZBLICK_USER=ENTER_USER_HERE -e FINANZBLICK_PW=ENTER_PW_HERE finanzblickscraper
+docker run -dit -v /opt/docker_share:/opt/docker_share --name fb-scraper --network finanzblick-net -e FINANZBLICK_USER=ENTER_USER_HERE -e FINANZBLICK_PW=ENTER_PW_HERE -e SPRING_PROFILES_ACTIVE=rasp finanzblickscraper
