@@ -16,3 +16,10 @@ spring:
 
 selenium:
   address: http://selenium:4444/wd/hub
+
+---
+spring:
+  profiles: rasp
+
+selenium:
+  address: http://raspberrypi:4444/wd/hub
