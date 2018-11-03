@@ -4,6 +4,8 @@ services:
     build: .
     environment:
     - "SPRING_PROFILES_ACTIVE=docker"
+    - "FINANZBLICK_USER={FINANZBLICK_USER}"
+    - "FINANZBLICK_PW={FINANZBLICK_PW}"
     volumes:
       - exports:/opt/docker_share
 
