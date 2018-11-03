@@ -10,13 +10,21 @@ services:
       - exports:/opt/docker_share
 
   selenium:
-    image: deinchristian/rpi-selenium-hub-debug
+    image: deinchristian/rpi-selenium-hub
     ports:
-      - 5900:5900
       - 4444:4444
     volumes:
       - selenium0:/dev/shm
-      - exports:/home/seluser/Downloads
+
+  chrome-node:
+    image: deinchristian/rpi-selenium-node-chrome
+    environment:
+    - "HUB_PORT_4444_TCP_ADDR=selenium"
+    - "HUB_PORT_4444_TCP_PORT=4444"
+    ports:
+    - "5900:5900"
+    volumes:
+    - exports:/home/seluser/Downloads
 
 volumes:
   selenium0:
