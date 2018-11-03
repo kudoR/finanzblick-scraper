@@ -5,15 +5,15 @@ services:
     environment:
     - "SPRING_PROFILES_ACTIVE=docker"
     volumes:
-      - exports: /opt/docker_share
+      - exports:/opt/docker_share
 
   selenium:
     image: selenium/standalone-chrome-debug
     ports:
       - 5900:5900
     volumes:
-      - selenium0: /dev/shm
-      - exports: /home/seluser/Downloads
+      - selenium0:/dev/shm
+      - exports:/home/seluser/Downloads
 
 volumes:
   selenium0:
