@@ -39,7 +39,7 @@ public class ScraperJob {
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
             Map<String, Object> prefs = new HashMap<>();
-            prefs.put("download.prompt_for_download", true);
+            prefs.put("download.prompt_for_download", false);
             prefs.put("download.default_directory", "/home/seluser/Downloads");
             options.setExperimentalOption("prefs", prefs);
             this.driver = new RemoteWebDriver(
