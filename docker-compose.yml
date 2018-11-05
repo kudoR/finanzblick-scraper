@@ -17,7 +17,7 @@ services:
       - selenium0:/dev/shm
 
   chrome-node:
-    image: deinchristian/rpi-selenium-node-chrome
+    image: deinchristian/rpi-selenium-node-chrome-debug
     environment:
     - "HUB_PORT_4444_TCP_ADDR=selenium"
     - "HUB_PORT_4444_TCP_PORT=4444"
