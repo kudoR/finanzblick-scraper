@@ -7,26 +7,16 @@ services:
     - "FINANZBLICK_USER=${FINANZBLICK_USER}"
     - "FINANZBLICK_PW=${FINANZBLICK_PW}"
     volumes:
-      - exports:/opt/docker_share
+      - /exports:/opt/docker_share
 
   selenium:
-    image: deinchristian/rpi-selenium-hub
+    image: selenium/standalone-chrome-debug
     ports:
-      - 4444:4444
+      - 5900:5900
     volumes:
-      - selenium0:/dev/shm
-
-  chrome-node:
-    image: deinchristian/rpi-selenium-node-chrome-debug
-    environment:
-    - "HUB_PORT_4444_TCP_ADDR=selenium"
-    - "HUB_PORT_4444_TCP_PORT=4444"
-    ports:
-    - "5900:5900"
-    volumes:
-    - exports:/home/seluser/Downloads
+      - /dev/shm:/dev/shm
+      - /exports:/home/seluser/Downloads
     user: root
 
 volumes:
-  selenium0:
   exports:
