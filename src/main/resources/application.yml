@@ -23,3 +23,21 @@ spring:
 
 selenium:
   address: http://raspberrypi:4444/wd/hub
+
+---
+spring:
+  profiles: livedb
+
+  datasource:
+    url: jdbc:mysql://kdr.dynip.online:9779/fb
+    username: ${username}
+    password: ${password}
+    driverClassName: org.mariadb.jdbc.Driver
+
+    jpa:
+      database-plattform: org.hibernate.dialect.MySQL5Dialect
+      hibernate:
+        ddl-auto: update
+
+
+

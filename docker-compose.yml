@@ -3,7 +3,7 @@ services:
   scraper:
     build: .
     environment:
-    - "SPRING_PROFILES_ACTIVE=docker"
+    - "SPRING_PROFILES_ACTIVE=docker,livedb"
     - "FINANZBLICK_USER=${FINANZBLICK_USER}"
     - "FINANZBLICK_PW=${FINANZBLICK_PW}"
     volumes:
