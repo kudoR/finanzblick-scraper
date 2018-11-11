@@ -6,6 +6,8 @@ services:
     - "SPRING_PROFILES_ACTIVE=docker,livedb"
     - "FINANZBLICK_USER=${FINANZBLICK_USER}"
     - "FINANZBLICK_PW=${FINANZBLICK_PW}"
+    - "DB_USER=${DB_USER}"
+    - "DB_PW=${DB_PW}"
     volumes:
       - /exports:/opt/docker_share
 
