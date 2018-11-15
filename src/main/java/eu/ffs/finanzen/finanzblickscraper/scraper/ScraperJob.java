@@ -69,9 +69,9 @@ public class ScraperJob {
 
 
         // quit sesssion
-        driver.close();
+        //driver.close();
         driver.quit();
-        this.driver = null;
+        //this.driver = null;
     }
 
     private boolean getExportDefault(String user, String pw) {
