@@ -20,7 +20,7 @@ public class Buchung {
     private String iban;
     private String bic;
     private String kategorie;
-
+    private String notiz;
 
     public String getBuchungsdatum() {
         return buchungsdatum;
@@ -84,5 +84,13 @@ public class Buchung {
 
     public void setKategorie(String kategorie) {
         this.kategorie = kategorie;
+    }
+
+    public String getNotiz() {
+        return notiz;
+    }
+
+    public void setNotiz(String notiz) {
+        this.notiz = notiz;
     }
 }
