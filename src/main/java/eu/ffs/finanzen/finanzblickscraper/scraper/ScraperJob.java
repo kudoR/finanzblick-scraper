@@ -35,18 +35,15 @@ public class ScraperJob {
     }
 
     public void getExport(String user, String pw) throws MalformedURLException {
-
-        if (driver == null) {
-            ChromeOptions options = new ChromeOptions();
-            Map<String, Object> prefs = new HashMap<>();
-            prefs.put("download.prompt_for_download", false);
-            prefs.put("download.default_directory", "/home/seluser/Downloads");
-            options.setExperimentalOption("prefs", prefs);
-            this.driver = new RemoteWebDriver(
-                    new URL(scraperConfig.getSeleniumAddress()),
-                    options
-            );
-        }
+        ChromeOptions options = new ChromeOptions();
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("download.default_directory", "/home/seluser/Downloads");
+        options.setExperimentalOption("prefs", prefs);
+        this.driver = new RemoteWebDriver(
+                new URL(scraperConfig.getSeleniumAddress()),
+                options
+        );
 
         if (this.wait == null) {
             this.wait = new FluentWait<>(driver)
@@ -87,7 +84,7 @@ public class ScraperJob {
             waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
             waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
 
-            while(!fileDownloaded()) {
+            while (!fileDownloaded()) {
                 System.out.println("Waiting for file download to complete...");
                 Thread.sleep(1000);
             }
@@ -156,14 +153,12 @@ public class ScraperJob {
 
     protected void waitUntilVisibleAndThenClickOn(By by) throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-
         driver.findElement(by).click();
     }
 
     protected void waitUntilClickableAndThenClickOn(By by) throws InterruptedException {
         wait.until(ExpectedConditions.elementToBeClickable(by));
         driver.findElement(by).click();
-
     }
 
 }
