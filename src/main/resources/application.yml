@@ -34,10 +34,10 @@ spring:
     password: ${DB_PW}
     driverClassName: org.mariadb.jdbc.Driver
 
-    jpa:
-      database-plattform: org.hibernate.dialect.MySQL5Dialect
-      hibernate:
-        ddl-auto: update
+  jpa:
+    database-plattform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
 
 
 
