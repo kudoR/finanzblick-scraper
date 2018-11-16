@@ -1,5 +1,7 @@
 package eu.ffs.finanzen.finanzblickscraper.entity;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,14 +14,31 @@ public class Buchung {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @CsvBindByPosition(position = 0)
     private String buchungsdatum;
+
+    @CsvBindByPosition(position = 1)
     private String empfaenger;
+
+    @CsvBindByPosition(position = 2)
     private String verwendungszweck;
+
+    @CsvBindByPosition(position = 3)
     private String buchungstext;
+
+    @CsvBindByPosition(position = 4)
     private String betrag;
+
+    @CsvBindByPosition(position = 5)
     private String iban;
+
+    @CsvBindByPosition(position = 6)
     private String bic;
+
+    @CsvBindByPosition(position = 7)
     private String kategorie;
+
+    @CsvBindByPosition(position = 8)
     private String notiz;
 
     public String getBuchungsdatum() {

@@ -52,7 +52,6 @@ public class JobWorker {
             this.buchungRepository.saveAll(buchungen);
         } catch (FileNotFoundException e) {
             System.out.println("No file found for import. Will try again later.");
-        //    e.printStackTrace();
         }
     }
 
