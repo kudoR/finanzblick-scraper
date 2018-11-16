@@ -67,7 +67,7 @@ public class ScraperJob {
 
         // quit sesssion
         //driver.close();
-        driver.quit();
+        //driver.quit();
         //this.driver = null;
     }
 
