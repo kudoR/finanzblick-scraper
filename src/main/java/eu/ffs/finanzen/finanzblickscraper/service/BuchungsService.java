@@ -47,7 +47,12 @@ public class BuchungsService {
         if (source != null) {
             Buchung buchung = new Buchung();
             if (source.getBetrag() != null) {
-                buchung.setBetrag(new BigDecimal(source.getBetrag()));
+                System.out.println("source.betrag" + source.getBetrag());
+                try {
+                    buchung.setBetrag(new BigDecimal(source.getBetrag()));
+                } catch (Exception e) {
+                    System.out.println("Numberformatexception...");
+                }
             }
             buchung.setBic(source.getBic());
             if (source.getBuchungsdatum() != null) {
