@@ -43,17 +43,24 @@ public class BuchungsService {
         return localDate.isAfter(maxDate);
     }
 
-    private Buchung toBuchung(BuchungDTO buchungDTO) {
-        Buchung buchung = new Buchung();
-        buchung.setBetrag(new BigDecimal(buchungDTO.getBetrag()));
-        buchung.setBic(buchungDTO.getBic());
-        buchung.setBuchungsdatum(LocalDate.parse(buchungDTO.getBuchungsdatum()));
-        buchung.setBuchungstext(buchungDTO.getBuchungstext());
-        buchung.setEmpfaenger(buchungDTO.getEmpfaenger());
-        buchung.setIban(buchungDTO.getBic());
-        buchung.setKategorie(buchungDTO.getKategorie());
-        buchung.setNotiz(buchungDTO.getNotiz());
-        buchung.setVerwendungszweck(buchungDTO.getVerwendungszweck());
-        return buchung;
+    private Buchung toBuchung(BuchungDTO source) {
+        if (source != null) {
+            Buchung buchung = new Buchung();
+            if (source.getBetrag() != null) {
+                buchung.setBetrag(new BigDecimal(source.getBetrag()));
+            }
+            buchung.setBic(source.getBic());
+            if (source.getBuchungsdatum() != null) {
+                buchung.setBuchungsdatum(LocalDate.parse(source.getBuchungsdatum()));
+            }
+            buchung.setBuchungstext(source.getBuchungstext());
+            buchung.setEmpfaenger(source.getEmpfaenger());
+            buchung.setIban(source.getBic());
+            buchung.setKategorie(source.getKategorie());
+            buchung.setNotiz(source.getNotiz());
+            buchung.setVerwendungszweck(source.getVerwendungszweck());
+            return buchung;
+        }
+        return null;
     }
 }

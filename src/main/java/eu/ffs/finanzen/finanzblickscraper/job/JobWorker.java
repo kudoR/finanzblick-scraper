@@ -8,10 +8,12 @@ import eu.ffs.finanzen.finanzblickscraper.service.BuchungsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import eu.ffs.finanzen.finanzblickscraper.repository.BuchungRepository;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -45,15 +47,19 @@ public class JobWorker {
     }
 
     @Scheduled(fixedRate = 10000L)
-    public void performImport() {
-        String downloadFilePath = "/opt/docker_share/Buchungsliste.csv";
-        List<BuchungDTO> buchungen = null;
-        try {
-            buchungen = csvReader.doRead(downloadFilePath);
-            buchungsService.processBuchungen(buchungen);
-        } catch (FileNotFoundException e) {
-            System.out.println("No file found for import. Will try again later.");
-        }
+    public void performImport() throws IOException {
+        Files
+                .walk(Paths.get("/opt/docker_share/"))
+                .forEach(path -> {
+                    try {
+                        if (path.endsWith("csv")) {
+                            List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toString());
+                            buchungsService.processBuchungen(buchungDTOS);
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
 }

@@ -1,7 +1,6 @@
 package eu.ffs.finanzen.finanzblickscraper.csv;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import eu.ffs.finanzen.finanzblickscraper.entity.Buchung;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
