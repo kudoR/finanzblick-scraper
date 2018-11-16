@@ -10,11 +10,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class JobWorker {
@@ -47,19 +48,19 @@ public class JobWorker {
     }
 
     @Scheduled(fixedRate = 10000L)
-    public void performImport() throws IOException {
-        Files
-                .walk(Paths.get("/opt/docker_share/"))
-                .forEach(path -> {
-                    try {
-                        if (path.endsWith("csv")) {
-                            List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toString());
+    public void performImport() throws Exception {
+        try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share/"))) {
+            paths.filter(Files::isRegularFile)
+                    .filter(path -> path.endsWith("csv"))
+                    .forEach(path -> {
+                        try {
+                            List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toFile());
                             buchungsService.processBuchungen(buchungDTOS);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
                         }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                });
+                    });
+        }
     }
 
 }
