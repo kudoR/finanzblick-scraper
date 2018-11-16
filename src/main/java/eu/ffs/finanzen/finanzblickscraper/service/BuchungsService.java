@@ -40,7 +40,7 @@ public class BuchungsService {
         if (maxDate == null) {
             return true;
         }
-        LocalDate localDate = LocalDate.parse(datumAsString);
+        LocalDate localDate = LocalDate.parse(datumAsString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         return localDate.isAfter(maxDate);
     }
 
