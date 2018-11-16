@@ -19,7 +19,8 @@ public class BuchungsService {
     private BuchungRepository buchungRepository;
 
     public void processBuchungen(List<BuchungDTO> buchungDTOS) {
-        LocalDate maxDate = buchungRepository.findTop1ByOrderByBuchungsdatumDesc().getBuchungsdatum();
+        Buchung byBuchungsdatumDesc = buchungRepository.findTop1ByOrderByBuchungsdatumDesc();
+        LocalDate maxDate = byBuchungsdatumDesc != null ? byBuchungsdatumDesc.getBuchungsdatum() : null;
         buchungRepository.saveAll(
                 buchungDTOS
                         .stream()
@@ -35,6 +36,9 @@ public class BuchungsService {
     }
 
     private boolean isBuchungsdatumValid(String datumAsString, LocalDate maxDate) {
+        if (maxDate == null) {
+            return true;
+        }
         LocalDate localDate = LocalDate.parse(datumAsString);
         return localDate.isAfter(maxDate);
     }
