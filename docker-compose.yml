@@ -16,6 +16,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
       - /exports:/home/seluser/Downloads
+      - /m2:/root/.m2
     user: root
 
 volumes:

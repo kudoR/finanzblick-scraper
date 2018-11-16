@@ -51,9 +51,9 @@ public class JobWorker {
     public void performImport() throws Exception {
         System.out.println("called performImport");
         try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share"))) {
-            System.out.println("files to process: " + paths.count());
+            System.out.println("starting to process...");
             paths.filter(Files::isRegularFile)
-                    .filter(path -> path.endsWith("csv"))
+                    //.filter(path -> path.endsWith("csv"))
                     .forEach(path -> {
                         try {
                             System.out.println("checking path: " + path);
