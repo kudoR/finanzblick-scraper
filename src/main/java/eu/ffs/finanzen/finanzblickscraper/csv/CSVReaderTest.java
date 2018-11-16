@@ -1,6 +1,5 @@
 package eu.ffs.finanzen.finanzblickscraper.csv;
 
-import eu.ffs.finanzen.finanzblickscraper.entity.Buchung;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,7 @@ public class CSVReaderTest {
     @Test
     public void doRead() throws FileNotFoundException {
         String filePath="/Users/j/Downloads/Buchungsliste.csv";
-        List<Buchung> buchungs = underTest.doRead(filePath);
+        List<BuchungDTO> buchungs = underTest.doRead(filePath);
         System.out.println(buchungs);
     }
 }

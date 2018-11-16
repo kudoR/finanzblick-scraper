@@ -4,4 +4,5 @@ import eu.ffs.finanzen.finanzblickscraper.entity.Buchung;
 import org.springframework.data.repository.CrudRepository;
 
 public interface BuchungRepository extends CrudRepository<Buchung, Long> {
+    Buchung findTop1ByOrderByBuchungsdatumDesc();
 }

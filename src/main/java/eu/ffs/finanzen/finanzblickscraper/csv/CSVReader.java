@@ -11,10 +11,10 @@ import java.util.List;
 @Service
 public class CSVReader {
 
-    public List<Buchung> doRead(String filePath) throws FileNotFoundException {
+    public List<BuchungDTO> doRead(String filePath) throws FileNotFoundException {
         return new CsvToBeanBuilder(new FileReader(filePath))
                 .withSeparator(';')
-                .withType(Buchung.class)
+                .withType(BuchungDTO.class)
                 .withSkipLines(1)
                 .build().parse();
     }

@@ -1,45 +1,56 @@
-package eu.ffs.finanzen.finanzblickscraper.entity;
+package eu.ffs.finanzen.finanzblickscraper.csv;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import com.opencsv.bean.CsvBindByPosition;
 
-@Entity
-public class Buchung {
+public class BuchungDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @CsvBindByPosition(position = 0)
+    private String buchungsdatum;
 
-    private LocalDate buchungsdatum;
+    @CsvBindByPosition(position = 1)
     private String empfaenger;
+
+    @CsvBindByPosition(position = 2)
     private String verwendungszweck;
+
+    @CsvBindByPosition(position = 3)
     private String buchungstext;
-    private BigDecimal betrag;
+
+    @CsvBindByPosition(position = 4)
+    private String betrag;
+
+    @CsvBindByPosition(position = 5)
     private String iban;
+
+    @CsvBindByPosition(position = 6)
     private String bic;
+
+    @CsvBindByPosition(position = 7)
     private String kategorie;
+
+    @CsvBindByPosition(position = 8)
     private String notiz;
 
-    public Buchung() {
+    public BuchungDTO() {
     }
 
-    public long getId() {
-        return id;
+    public BuchungDTO(String buchungsdatum, String empfaenger, String verwendungszweck, String buchungstext, String betrag, String iban, String bic, String kategorie, String notiz) {
+        this.buchungsdatum = buchungsdatum;
+        this.empfaenger = empfaenger;
+        this.verwendungszweck = verwendungszweck;
+        this.buchungstext = buchungstext;
+        this.betrag = betrag;
+        this.iban = iban;
+        this.bic = bic;
+        this.kategorie = kategorie;
+        this.notiz = notiz;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LocalDate getBuchungsdatum() {
+    public String getBuchungsdatum() {
         return buchungsdatum;
     }
 
-    public void setBuchungsdatum(LocalDate buchungsdatum) {
+    public void setBuchungsdatum(String buchungsdatum) {
         this.buchungsdatum = buchungsdatum;
     }
 
@@ -67,11 +78,11 @@ public class Buchung {
         this.buchungstext = buchungstext;
     }
 
-    public BigDecimal getBetrag() {
+    public String getBetrag() {
         return betrag;
     }
 
-    public void setBetrag(BigDecimal betrag) {
+    public void setBetrag(String betrag) {
         this.betrag = betrag;
     }
 
