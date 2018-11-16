@@ -49,12 +49,14 @@ public class JobWorker {
 
     @Scheduled(fixedRate = 10000L)
     public void performImport() throws Exception {
-        try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share/"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share"))) {
             paths.filter(Files::isRegularFile)
                     .filter(path -> path.endsWith("csv"))
                     .forEach(path -> {
                         try {
+                            System.out.println("checking path: " + path);
                             List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toFile());
+                            System.out.println("processing " + buchungDTOS.size() + " buchungen");
                             buchungsService.processBuchungen(buchungDTOS);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
