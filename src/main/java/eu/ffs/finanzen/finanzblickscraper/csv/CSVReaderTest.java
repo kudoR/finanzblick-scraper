@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class CSVReaderTest {
 
     @Test
     public void doRead() throws FileNotFoundException {
-        String filePath="/Users/j/Downloads/Buchungsliste.csv";
-        List<BuchungDTO> buchungs = underTest.doRead(filePath);
+        File file = new File("/Users/j/Downloads/Buchungsliste.csv");
+        List<BuchungDTO> buchungs = underTest.doRead(file);
         System.out.println(buchungs);
     }
 }
