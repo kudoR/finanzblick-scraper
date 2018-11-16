@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -47,16 +48,20 @@ public class BuchungsService {
         if (source != null) {
             Buchung buchung = new Buchung();
             if (source.getBetrag() != null) {
-                System.out.println("source.betrag" + source.getBetrag());
+                System.out.println("source.betrag " + source.getBetrag());
                 try {
-                    buchung.setBetrag(new BigDecimal(source.getBetrag()));
+                    buchung.setBetrag(new BigDecimal(source.getBetrag().replaceAll(",", ".")));
                 } catch (Exception e) {
                     System.out.println("Numberformatexception...");
                 }
             }
             buchung.setBic(source.getBic());
             if (source.getBuchungsdatum() != null) {
-                buchung.setBuchungsdatum(LocalDate.parse(source.getBuchungsdatum()));
+                try {
+                    buchung.setBuchungsdatum(LocalDate.parse(source.getBuchungsdatum(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                } catch (Exception e) {
+                    System.out.println("DateTimeFormatException");
+                }
             }
             buchung.setBuchungstext(source.getBuchungstext());
             buchung.setEmpfaenger(source.getEmpfaenger());
