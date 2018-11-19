@@ -46,7 +46,7 @@ public class JobWorker {
         }
     }
 
-    @Scheduled(fixedRate = 10000L)
+   // @Scheduled(fixedRate = 10000L)
     public void performImport() throws Exception {
         System.out.println("called performImport");
         try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share"))) {
