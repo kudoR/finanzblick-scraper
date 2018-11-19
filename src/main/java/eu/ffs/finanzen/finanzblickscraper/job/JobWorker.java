@@ -35,6 +35,7 @@ public class JobWorker {
 
     @Scheduled(fixedRateString = "${job.scheduler.rate}")
     public void performScraping() throws InterruptedException, MalformedURLException {
+        System.out.println("starting scraping...");
         synchronized (jobRunning) {
             if (!jobRunning) {
                 jobRunning = true;
