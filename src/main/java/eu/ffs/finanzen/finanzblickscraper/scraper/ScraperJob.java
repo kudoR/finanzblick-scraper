@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openqa.selenium.By.className;
@@ -100,7 +99,10 @@ public class ScraperJob {
 
                 waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
                 waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
-                wait.withTimeout(20, TimeUnit.SECONDS);
+                for (int i = 20; i > 0; i--) {
+                    wait.withTimeout(1, SECONDS);
+                    System.out.println("Waiting..." + i);
+                }
             }
 
             System.out.println("Default flow was successful.");
