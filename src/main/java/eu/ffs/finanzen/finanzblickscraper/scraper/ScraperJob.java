@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.openqa.selenium.By.className;
 import static org.openqa.selenium.By.id;
 
 @Component
@@ -93,7 +92,7 @@ public class ScraperJob {
 
             waitUntilClickableAndThenClickOn(id("menu-account"));
 
-            List<WebElement> elements = driver.findElements(className("card-image"));
+            List<WebElement> elements = driver.findElements(By.xpath("//div[contains(@class, 'general-card')]"));
             System.out.println("card-image Elements found: " + elements.size());
             int j = 0;
             for (WebElement element : elements) {
