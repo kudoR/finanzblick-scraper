@@ -10,13 +10,13 @@ services:
     - "DB_PW=${DB_PW}"
     volumes:
       - /exports:/opt/docker_share
+      - /m2:/root/.m2
 
   selenium:
     image: selenium/standalone-chrome
     volumes:
       - /dev/shm:/dev/shm
       - /exports:/home/seluser/Downloads
-      - /m2:/root/.m2
     user: root
 
 volumes:
