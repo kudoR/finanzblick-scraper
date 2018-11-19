@@ -111,6 +111,7 @@ public class ScraperJob {
             System.out.println("Default flow was successful.");
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Default flow was not successful.");
             return false;
         }
