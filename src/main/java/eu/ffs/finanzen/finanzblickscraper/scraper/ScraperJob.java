@@ -94,10 +94,14 @@ public class ScraperJob {
             waitUntilClickableAndThenClickOn(id("menu-account"));
 
             List<WebElement> elements = driver.findElements(className("card-image"));
+            System.out.println("card-image Elements found: " + elements.size());
+            int j = 0;
             for (WebElement element : elements) {
+                System.out.println("clicking on element no.: " + j++);
                 element.click();
-
+                System.out.println("clicked... searching for print button");
                 waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
+                System.out.println("clicked on print button");
                 waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
                 for (int i = 20; i > 0; i--) {
                     wait.withTimeout(1, SECONDS);
