@@ -3,7 +3,7 @@ selenium:
 
 job:
   scheduler:
-    rate: 60000
+    rate: 600000
 
 finanzblick:
   address: https://www.buhl.de/finanzblick/
