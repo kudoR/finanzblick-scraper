@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.openqa.selenium.By.*;
 
 @Component
 public class ScraperJob {
@@ -71,18 +72,27 @@ public class ScraperJob {
         //this.driver = null;
     }
 
+    private boolean refreshAccounts() throws InterruptedException {
+        waitUntilClickableAndThenClickOn(id("menu-dashboard"));
+        waitUntilClickableAndThenClickOn(id("dashboard-btn-update"));
+        waitUntilClickableAndThenClickOn(id("popup-modal-btn-ok"));
+        return true;
+    }
+
     private boolean getExportDefault(String user, String pw) {
         try {
             System.out.println("Trying default flow...");
 
-            fillInput(By.id("ms-input-uname"), user);
-            fillInput(By.id("ms-input-pword"), pw);
+            fillInput(id("ms-input-uname"), user);
+            fillInput(id("ms-input-pword"), pw);
 
-            waitUntilClickableAndThenClickOn(By.id("ms-button-login"));
+            waitUntilClickableAndThenClickOn(id("ms-button-login"));
 
-            waitUntilClickableAndThenClickOn(By.id("menu-account"));
-            waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
-            waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
+            refreshAccounts();
+
+            waitUntilClickableAndThenClickOn(id("menu-account"));
+            waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
+            waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
 
             while (!fileDownloaded()) {
                 System.out.println("Waiting for file download to complete...");
@@ -110,11 +120,11 @@ public class ScraperJob {
             System.out.println("Trying confirm old session flow...");
             String selector = "popup-user-is-online-btn-ok";
 
-            waitUntilClickableAndThenClickOn(By.id(selector));
+            waitUntilClickableAndThenClickOn(id(selector));
 
-            waitUntilClickableAndThenClickOn(By.id("menu-account"));
-            waitUntilClickableAndThenClickOn(By.id("top-container-print-btn"));
-            waitUntilClickableAndThenClickOn(By.id("popup-new-statements-date-btn-csv"));
+            waitUntilClickableAndThenClickOn(id("menu-account"));
+            waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
+            waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
 
         } catch (Exception e) {
             return false;
