@@ -91,7 +91,7 @@ public class ScraperJob {
             refreshAccounts();
 
             waitUntilClickableAndThenClickOn(id("menu-account"));
-
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class, 'general-card')]")));
             List<WebElement> elements = driver.findElements(By.xpath("//div[contains(@class, 'general-card')]"));
             System.out.println("card-image Elements found: " + elements.size());
             int j = 0;
