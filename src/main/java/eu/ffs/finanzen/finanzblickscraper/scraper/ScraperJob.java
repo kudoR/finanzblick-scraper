@@ -17,11 +17,13 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.openqa.selenium.By.*;
+import static org.openqa.selenium.By.className;
+import static org.openqa.selenium.By.id;
 
 @Component
 public class ScraperJob {
@@ -91,15 +93,15 @@ public class ScraperJob {
             refreshAccounts();
 
             waitUntilClickableAndThenClickOn(id("menu-account"));
-            waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
-            waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
 
-            while (!fileDownloaded()) {
-                System.out.println("Waiting for file download to complete...");
-                Thread.sleep(1000);
+            List<WebElement> elements = driver.findElements(className("card-image"));
+            for (WebElement element : elements) {
+                element.click();
+
+                waitUntilClickableAndThenClickOn(id("top-container-print-btn"));
+                waitUntilClickableAndThenClickOn(id("popup-new-statements-date-btn-csv"));
+                wait.withTimeout(20, TimeUnit.SECONDS);
             }
-
-            wait.withTimeout(10, TimeUnit.SECONDS);
 
             System.out.println("Default flow was successful.");
             return true;

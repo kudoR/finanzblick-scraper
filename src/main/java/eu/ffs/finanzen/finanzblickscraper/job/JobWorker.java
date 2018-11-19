@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,14 +52,13 @@ public class JobWorker {
         try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share"))) {
             System.out.println("starting to process...");
             paths.filter(Files::isRegularFile)
-                    //.filter(path -> path.endsWith("csv"))
                     .forEach(path -> {
                         try {
                             System.out.println("checking path: " + path);
                             List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toFile());
                             System.out.println("processing " + buchungDTOS.size() + " buchungen");
                             buchungsService.processBuchungen(buchungDTOS);
-                        } catch (FileNotFoundException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
