@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,18 +48,30 @@ public class JobWorker {
         }
     }
 
-   // @Scheduled(fixedRate = 10000L)
-    public void performImport() throws Exception {
+    @Scheduled(fixedRate = 10000L)
+    public void performInitImports() throws Exception {
+        performImport(Paths.get("/opt/docker_share/init"), true);
+    }
+
+    @Scheduled(fixedRate = 100000L)
+    public void scheduledImporter() throws Exception {
+        performImport(Paths.get("/opt/docker_share"), false);
+    }
+
+    public void performImport(Path filesPath, boolean init) throws Exception {
         System.out.println("called performImport");
-        try (Stream<Path> paths = Files.walk(Paths.get("/opt/docker_share"))) {
+        try (Stream<Path> paths = Files.walk(filesPath)) {
             System.out.println("starting to process...");
             paths.filter(Files::isRegularFile)
                     .forEach(path -> {
                         try {
                             System.out.println("checking path: " + path);
-                            List<BuchungDTO> buchungDTOS = csvReader.doRead(path.toFile());
+                            File file = path.toFile();
+                            List<BuchungDTO> buchungDTOS = csvReader.doRead(file);
                             System.out.println("processing " + buchungDTOS.size() + " buchungen");
-                            buchungsService.processBuchungen(buchungDTOS);
+                            buchungsService.processBuchungen(buchungDTOS, init);
+                            file.renameTo(new File("/opt/docker_share/archive/" + file.getName()));
+                            //file.delete();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

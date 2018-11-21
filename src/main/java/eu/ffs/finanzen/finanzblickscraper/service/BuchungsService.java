@@ -19,21 +19,21 @@ public class BuchungsService {
     @Autowired
     private BuchungRepository buchungRepository;
 
-    public void processBuchungen(List<BuchungDTO> buchungDTOS) {
+    public void processBuchungen(List<BuchungDTO> buchungDTOS, boolean init) {
         Buchung byBuchungsdatumDesc = buchungRepository.findTop1ByOrderByBuchungsdatumDesc();
         LocalDate maxDate = byBuchungsdatumDesc != null ? byBuchungsdatumDesc.getBuchungsdatum() : null;
         buchungRepository.saveAll(
                 buchungDTOS
                         .stream()
-                        .filter(filterBuchungen(maxDate))
+                        .filter(filterBuchungen(maxDate, init))
                         .map(this::toBuchung)
                         .collect(Collectors.toList())
         );
     }
 
 
-    private Predicate<BuchungDTO> filterBuchungen(LocalDate maxDate) {
-        return buchungDTO -> isBuchungsdatumValid(buchungDTO.getBuchungsdatum(), maxDate);
+    private Predicate<BuchungDTO> filterBuchungen(LocalDate maxDate, boolean init) {
+        return buchungDTO -> init || isBuchungsdatumValid(buchungDTO.getBuchungsdatum(), maxDate);
     }
 
     private boolean isBuchungsdatumValid(String datumAsString, LocalDate maxDate) {
