@@ -1,9 +1,6 @@
 package eu.ffs.finanzen.finanzblickscraper.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -16,6 +13,7 @@ public class Buchung {
 
     private LocalDate buchungsdatum;
     private String empfaenger;
+    @Lob
     private String verwendungszweck;
     private String buchungstext;
     private BigDecimal betrag;
