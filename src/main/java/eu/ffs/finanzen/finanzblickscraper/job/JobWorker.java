@@ -71,7 +71,7 @@ public class JobWorker {
                             System.out.println("processing " + buchungDTOS.size() + " buchungen");
                             buchungsService.processBuchungen(buchungDTOS, init);
                             file.renameTo(new File("/opt/docker_share/archive/" + file.getName()));
-                            //file.delete();
+                            file.delete();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
